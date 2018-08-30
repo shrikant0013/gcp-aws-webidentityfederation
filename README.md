@@ -133,13 +133,15 @@ export AWS_ROLE_ARN="arn:aws:iam::<accountid>:role/<role name>"
 ```
 
 
-If you are running locally, make sure you have created service account keys and exported environment variable
+If you are running locally, make sure you have activated your service account or google account correctly, you can do one of the following
+* [gcloud auth activate-service-account](https://cloud.google.com/sdk/gcloud/reference/auth/activate-service-account) (Recommended)
+* created service account keys and export environment variable
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS=<path to your service account keys json>
 ```
 
-Note, creating service account keys is not recommended best practice. This approach should only be used in local test environment.
-Your test service account should have only least privileges
+> Note: Creating service account keys is not recommended best practice. This approach should only be used in local test environment. Your test service account should have only least privileges
+
 
 ## To run the sample on Google Cloud Appengine Standard
 Install python dependencies in vendored `lib` directory
