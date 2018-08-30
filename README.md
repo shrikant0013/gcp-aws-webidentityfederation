@@ -1,13 +1,13 @@
-# Google Cloud to AWS authentication using WebIdentity Federatio
+# Google Cloud to AWS authentication using Web Identity Federation
 
 This sample shows how to make authenticated calls to AWS APIs from Google Cloud
 
 ![interaction diagram](docs/images/interaction-diagram.png)
 
 > Note in above picture S3 is just example service. You can call any AWS API that supports auth based on AWS STS credentials.
-> In GCP KMS, Datastore, Memcache are just shown for illustration purpose to indicate caching crdentials in case of high QPS services.
+> In GCP KMS, Datastore, Memcache are just shown for illustration purpose to suggest caching credentials in case of high QPS services.
 
-## Why use WebIdentityFederation
+## Why use Web Identity Federation
 * Based on OpenID Connect open standard
 
 ## Use cases
@@ -15,48 +15,45 @@ This sample shows how to make authenticated calls to AWS APIs from Google Cloud
 
 ## Google Cloud to AWS Federation
 1. Create a signed JWT using your system’s service account keys. This can be local operation or using Google Cloud signJWT API call (in case of GCP managed keys)
-    ```
+    ```json
         {
-            # The issuer must be the service account email.
-            "iss": <service account email>,
-            # The audience must be the auth token endpoint's URI
+            "iss": "<service account email>",
             "aud": "https://www.googleapis.com/oauth2/v4/token",
-            "target_audience": “<Use the URI string used above in the oaud field>”
-            "iat": now,
-            "exp": <1 hour or some expiry, AWS allows max 1 hour>
+            "target_audience": "<Use the URI string used above in the oaud field>",
+            "iat": "now",
+            "exp": "<1 hour or some expiry, AWS allows max 1 hour>"
         }
     ```
 2. Make call to "https://www.googleapis.com/oauth2/v4/token" to exchange above token for Google signed token
-    ```
-          data = {
-                    "grant_type": "urn:ietf:params:oauth:grant-type:jwt-bearer",
-                    "assertion": <above signed token>
-          }
+    ```json
+        data = {
+                  "grant_type": "urn:ietf:params:oauth:grant-type:jwt-bearer",
+                  "assertion": "<above signed token>"
+        }
     ```
 3. Google should return you JWT which should look something like:
-    ```
+    ```json
         {
-          "aud": <URI that you used in above target_audience field> ",
+          "aud": "<URI that you used in above target_audience field>",
           "iss": "https://accounts.google.com",
           "email_verified": true,
           "exp": 1535578337,
-          "azp": <service account email that was mentioned in iss above>,
+          "azp": "<service account email that was mentioned in iss above>",
           "iat": 1535574737,
-          "email": <service account email that was mentioned in iss above>,
+          "email": "<service account email that was mentioned in iss above>",
           "sub": "99992499378790129023"
         }
     ```
-
 4. Make AWS STS WebIdentityFederation API call to retrieve temporary credentials
 "https://sts.amazonaws.com/?DurationSeconds={DURATION}&Action=AssumeRoleWithWebIdentity&Version=2011-06-15&RoleSessionName={ROLE_SESSION}&RoleArn={ROLE_ARN}&WebIdentityToken={OPENIDTOKEN}"
 
-    Where,
-    ROLE_SESSION = Temporary identifier for this session. Helps in tracking when analyzing Cloudtrail events
-    ROLE_ARN = ARN role created in setup step 2 above
-    OPENIDTOKEN = Signed Token received from Google in prior step
+Where
+* ROLE_SESSION = Temporary identifier for this session. Helps in tracking when analyzing Cloudtrail events
+* ROLE_ARN = ARN role created in setup step 2 above
+* OPENIDTOKEN = Signed Token received from Google in prior step
 
-    You get AWS temporary credentials from above call that can be used to make signed requests to AWS
-    ```
+You get AWS temporary credentials from above call that can be used to make signed requests to AWS
+    ```xml
     <Credentials>
       <AccessKeyId>something-id</AccessKeyId>
       <SecretAccessKey>something-key</SecretAccessKey>
@@ -120,23 +117,23 @@ This sample shows how to make authenticated calls to AWS APIs from Google Cloud
 
 ## To run the sample locally
 Install python dependencies
-```
+```bash
 pip install -r requirements.txt
 ```
 
 Setup required environment variables
-```
+```bash
 export TARGET_AUDIENCE="https://<myservice>.<my-corp.net>"
 ```
 `TARGET_AUDIENCE` should in URI format, example `https://myservice.aud.my-corp.net`
 
-```
+```bash
 export AWS_ROLE_ARN="arn:aws:iam::<accountid>:role/<role name>"
 ```
 
 
 If you are running locally, make sure you have created service account keys and exported environment variable
-```
+```bash
 export GOOGLE_APPLICATION_CREDENTIALS=<path to your service account keys json>
 ```
 
@@ -145,14 +142,14 @@ Your test service account should have only least privileges
 
 ## To run the sample on Google Cloud Appengine Standard
 Install python dependencies in vendored `lib` directory
-```
+```bash
 pip install -r requirements.txt -t lib
 ```
 
 #### Deploy to Google Cloud
 Ensure [app-std.yaml](app-std.yaml) have `TARGET_AUDIENCE` and `AWS_ROLE_ARN` correctly set under `env_variables:` section
 
-```
+```bash
 gcloud app deploy app-std.yaml --project <google cloud project id>
 ```
 
@@ -160,7 +157,7 @@ gcloud app deploy app-std.yaml --project <google cloud project id>
 
 ## To run the sample on Google Cloud Appengine Flexible
 #### Local deploy
-```
+```bash
 python main.py
 ```
 Visit `http://127.0.0.1:8080`
@@ -170,7 +167,7 @@ Visit `http://127.0.0.1:8080`
 #### Deploy to Google Cloud
 Ensure [app-flex.yaml](app-flex.yaml) have `TARGET_AUDIENCE` and `AWS_ROLE_ARN` correctly set under `env_variables:` section
 
-```
+```bash
 gcloud app deploy app-flex.yaml --project
 ```
 
