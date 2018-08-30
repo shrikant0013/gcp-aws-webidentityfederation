@@ -1,0 +1,27 @@
+runtime: python
+env: flex
+entrypoint: gunicorn -b :$PORT main:app
+threadsafe: true
+service: sample-federation-flex
+
+handlers:
+- url: /.*
+  script: main.app
+  secure: always
+#  login: required Use IAP instead
+
+skip_files:
+- ^(.*/)?#.*#$
+- ^(.*/)?.*~$
+- ^(.*/)?.*\.py[co]$
+- ^(.*/)?.*/RCS/.*$
+- ^(.*/)?\..*$
+- ^(.*/)?\.bak$
+- ^(.*/)?.*\.yaml
+- ^(.*/)?.idea$
+
+
+env_variables:
+    TARGET_AUDIENCE: "https://<myservice>.<my-corp.net>"
+    AWS_ROLE_ARN: "arn:aws:iam::<account id>:role/<role name>"
+

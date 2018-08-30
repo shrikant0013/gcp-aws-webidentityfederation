@@ -1,0 +1,29 @@
+runtime: python27
+api_version: 1
+threadsafe: true
+service: sample-federation-std
+
+handlers:
+- url: /.*
+  script: main.app
+  secure: always
+#  login: required Use IAP instead
+
+skip_files:
+- ^(.*/)?#.*#$
+- ^(.*/)?.*~$
+- ^(.*/)?.*\.py[co]$
+- ^(.*/)?.*/RCS/.*$
+- ^(.*/)?\..*$
+- ^(.*/)?\.bak$
+- ^(.*/)?.*\.yaml
+- ^(.*/)?.idea$
+
+libraries:
+- name: ssl
+  version: latest
+
+env_variables:
+    GAE_USE_SOCKETS_HTTPLIB : 'true'
+    TARGET_AUDIENCE: "https://<myservice>.<my-corp.net>"
+    AWS_ROLE_ARN: "arn:aws:iam::<account id>:role/<role name>"
