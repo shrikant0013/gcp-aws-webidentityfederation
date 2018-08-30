@@ -52,7 +52,8 @@ This sample shows how to make authenticated calls to AWS APIs from Google Cloud
     * ROLE_ARN = ARN role created in setup step 2 above
     * OPENIDTOKEN = Signed Token received from Google in prior step
 
-You get AWS temporary credentials from above call that can be used to make signed requests to AWS
+  You get AWS temporary credentials from above call that can be used to make signed requests to AWS
+    
     ```xml
       <Credentials>
         <AccessKeyId>something-id</AccessKeyId>
