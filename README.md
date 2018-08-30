@@ -53,7 +53,7 @@ This sample shows how to make authenticated calls to AWS APIs from Google Cloud
     * OPENIDTOKEN = Signed Token received from Google in prior step
 
 You get AWS temporary credentials from above call that can be used to make signed requests to AWS
-    ```
+    ```xml
       <Credentials>
         <AccessKeyId>something-id</AccessKeyId>
         <SecretAccessKey>something-key</SecretAccessKey>
