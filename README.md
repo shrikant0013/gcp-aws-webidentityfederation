@@ -47,13 +47,13 @@ This sample shows how to make authenticated calls to AWS APIs from Google Cloud
 4. Make AWS STS WebIdentityFederation API call to retrieve temporary credentials
 "https://sts.amazonaws.com/?DurationSeconds={DURATION}&Action=AssumeRoleWithWebIdentity&Version=2011-06-15&RoleSessionName={ROLE_SESSION}&RoleArn={ROLE_ARN}&WebIdentityToken={OPENIDTOKEN}"
 
-Where
-* ROLE_SESSION = Temporary identifier for this session. Helps in tracking when analyzing Cloudtrail events
-* ROLE_ARN = ARN role created in setup step 2 above
-* OPENIDTOKEN = Signed Token received from Google in prior step
+    Where
+    * ROLE_SESSION = Temporary identifier for this session. Helps in tracking when analyzing Cloudtrail events
+    * ROLE_ARN = ARN role created in setup step 2 above
+    * OPENIDTOKEN = Signed Token received from Google in prior step
 
 You get AWS temporary credentials from above call that can be used to make signed requests to AWS
-    ```xml
+    ```
     <Credentials>
       <AccessKeyId>something-id</AccessKeyId>
       <SecretAccessKey>something-key</SecretAccessKey>
