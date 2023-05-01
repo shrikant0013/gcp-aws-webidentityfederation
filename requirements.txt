@@ -2,7 +2,7 @@ PyJWT
 google-auth
 requests
 werkzeug>=0.15.3
-Flask==1.0
+Flask==2.3.2
 requests-toolbelt==0.7.1
 boto3==1.4.7
 
