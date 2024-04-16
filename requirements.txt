@@ -7,4 +7,4 @@ requests-toolbelt==0.7.1
 boto3==1.4.7
 
 # Only if using flex
-gunicorn==19.9.0
+gunicorn==22.0.0
